@@ -5,11 +5,10 @@ node {
          }
          
          stage('Install node modules'){
-                      sh "npm install"
+                      bat "npm install"
          }
          stage('Build'){
-                     sh "ng build --no-aot --no-build-optimizer --base-href ./"
-                     sh "cp -R /home/var/lib/jenkins/workspace/angular/dist/*   /home/bibek/angular/"
+                    bat "npm run ng --build --prod"
          }
          stage('Deploy'){
                       sh "pm2 restart all"
