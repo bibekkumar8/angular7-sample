@@ -1,4 +1,4 @@
-# angular7-example
+# angular7-example SSR
 
 sample project using angular 7 contains:
 1. Home
