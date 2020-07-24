@@ -1,6 +1,6 @@
 node() {
          stage ('Cloning Git'){
-                    checkout sum
+                    checkout scm
          }
 
          stage('Install dependencies'){
