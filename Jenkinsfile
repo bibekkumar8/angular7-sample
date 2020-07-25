@@ -10,13 +10,12 @@ node() {
          
          
          stage('Build'){
-            nodejs('nodejs') {
-                sh 'ng build --prod'
+            
+                bat "ng build --prod"
                 echo "Build completed"
             }
-         }
          stage('Packege Build'){
-                   sh "tar -zcvf bundle.tar.gz dist/np7/"
+                   sh "7z -zcvf bundle.tar.gz dist/np7/"
          }
 
          stage('Artifacts Creation'){
@@ -39,7 +38,7 @@ node() {
              echo 'Artifacts copied'
 
              echo 'Copy'
-             sh "yes | sudo cp-R bundle.tar.gz /var/www/html && cd /var/www/html && sudo tar -xvf bundle.tar.gz"
+             sh "yes | sudo cp-R bundle.tar.gz /var/www/html && cd /var/www/html && sudo 7z -xvf bundle.tar.gz"
              echo "Copy completed"
          }
      
