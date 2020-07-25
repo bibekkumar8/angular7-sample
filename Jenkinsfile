@@ -1,6 +1,7 @@
 node() {
-           stage ('Checkout SCM'){
-                    git branch: 'master',url: 'https://github.com/sa3dwi/angular7-sample.git'
+           stage ('Cloning Git'){
+             checkout scm
+                    
          }
          stage('Install dependencies'){
              nodejs('nodejs') {
