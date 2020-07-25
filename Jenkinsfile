@@ -13,11 +13,11 @@ node() {
                      powershell 'npm run ng -- build --prod'
                      echo "build successful"
          }
-         stage('Package Build') {
-        powershell '7z -zcvf bundle.tar.gz dist/ng7/'
-    }
+        stage('Packege Build'){
+                   sh "tar -zcvf bundle.tar.gz dist/np7/"
+         }
 
-     stage('Artifacts Creation'){
+         stage('Artifacts Creation'){
              fingerprint 'bundle.tar.gz'
              achieveArtifacts 'bundle.tar.gz'
              echo "Artifacts created"
