@@ -9,7 +9,7 @@ node() {
              }
          
          
-         stage('Build')
+         stage('Build'){
                 bat "ng build --prod"
                 echo "Build completed"
             }
