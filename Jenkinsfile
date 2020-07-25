@@ -14,7 +14,7 @@ node() {
                      echo "build successful"
          }
           stage('Package Build') {
-        powershell '7z -zcvf bundle.tar.gz dist/ng7/'
+        sh "tar -zcvf bundle.tar.gz dist/np7/"
     }
 
     stage('Artifacts Creation') {
@@ -46,6 +46,6 @@ node('aws_node') {
     echo 'Artifacts copied'
 
     echo 'Copy'
-             sh "yes | sudo cp-R bundle.tar.gz /var/www/html && cd /var/www/html && sudo  7z -zcvf bundle.tar.gz"
+             sh "yes | sudo cp-R bundle.tar.gz /var/www/html && cd /var/www/html && sudo tar -xvf bundle.tar.gz"
              echo "Copy completed"
 }
