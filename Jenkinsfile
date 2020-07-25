@@ -46,6 +46,6 @@ node('aws_node') {
     echo 'Artifacts copied'
 
     echo 'Copy'
-    powershell 'yes -Recurse (copy -R bundle.tar.gz /var/www/html) -and (cd /var/www/html) -and (7z -xvf bundle.tar.gz)'
+    sh 'yes -Recurse (copy -R bundle.tar.gz /var/www/html) -and (cd /var/www/html) -and (7z -xvf bundle.tar.gz)'
     echo 'Copy completed'
 }
