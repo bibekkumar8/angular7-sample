@@ -4,11 +4,10 @@ node() {
                     
          }
          stage('Install dependencies'){
-             nodejs('nodejs') {
-                 sh 'npm install'
+                bat "npm install"
                  echo "Modules installed"
              }
-         }
+         
          
          stage('Build'){
             nodejs('nodejs') {
