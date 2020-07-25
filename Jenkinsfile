@@ -9,12 +9,11 @@ node() {
              }
          
          
-         stage('Build'){
-            
+         stage('Build')
                 bat "ng build --prod"
                 echo "Build completed"
             }
-         stage('Packege Build'){
+         stage('Package Build'){
                    sh "7z -zcvf bundle.tar.gz dist/np7/"
          }
 
