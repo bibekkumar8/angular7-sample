@@ -17,36 +17,27 @@ node() {
         powershell '7z -zcvf bundle.tar.gz dist/ng7/'
     }
 
-    stage('Artifacts Creation') {
-        fingerprint 'bundle.tar.gz'
-        archiveArtifacts 'bundle.tar.gz'
-        echo "Artifacts created"
-    }
+     stage('Artifacts Creation'){
+             fingerprint 'bundle.tar.gz'
+             achieveArtifacts 'bundle.tar.gz'
+             echo "Artifacts created"
 
-    stage('Stash changes') {
-        stash allowEmpty: true, includes: 'bundle.tar.gz', name: 'buildArtifacts'
-    }
-         stage('Approval') {
-            // no agent, so executors are not used up when waiting for approvals
-            //agent none
-           // steps {
-                script {
-                    def deploymentDelay = input id: 'Deploy', message: 'Deploy to production?', submitter: 'rkivisto,admin', parameters: [choice(choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'], description: 'Hours to delay deployment?', name: 'deploymentDelay')]
-                    sleep time: deploymentDelay.toInteger(), unit: 'HOURS'
-             //   }
-            }
-        }
-       //  stage('Deploy'){
-         //             powershell 'pm2 restart all'
-        // }
-     }
-node('aws_node') {
-    echo 'Unstash'
-    unstash 'buildArtifacts'
-    echo 'Artifacts copied'
+         }
 
-    echo 'Copy'
-    powershell 'yes -Recurse (copy -R bundle.tar.gz /var/www/html) -and (cd /var/www/html) -and (7z -xvf bundle.tar.gz)'
-    echo 'Copy completed'
+         stage('Stash changes') {
+             stash allowEmpty: true, includes: 'bundle.tar.gz', name: 'buildartifacts'
+         }
+
+    }
+        
+
+         node('awsnode'){
+             echo 'Unstash'
+             unstash 'buildArtifacts'
+             echo 'Artifacts copied'
+
+             echo 'Copy'
+             sh "yes | sudo cp-R bundle.tar.gz /var/www/html && cd /var/www/html && sudo tar -xvf bundle.tar.gz"
+             echo "Copy completed"
          }
      
