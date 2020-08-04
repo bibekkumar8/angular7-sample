@@ -1,51 +1,52 @@
-node() {
-           stage ('Cloning Git'){
-             checkout scm
-                    
-         }
-         stage('Install dependencies'){
-                bat "npm install"
-                 echo "Modules installed"
-             }
-         
-         
-         stage('Build'){
-                     powershell 'npm run ng -- build --prod'
-                     echo "build successful"
-         }
-          stage('Package Build') {
-        powershell '7z -zcvf bundle.tar.gz dist/ng7/'
+pipeline {
+ agent any
+  stages {
+    stage('SCM') {
+      steps {
+         git 'https://github.com/bibekkumar8/angular7-sample.git'
+       }
     }
+   stage("Install node modules") {
+     steps {
+	     powershell 'npm install'
+         echo "modules installed"
+   }
+   }
+   stage("build") {
+     steps {
+			powershell 'npm run ng -- build --prod'
+            echo "build successful"
+   }
+   }
 
-    stage('Artifacts Creation') {
-        fingerprint 'bundle.tar.gz'
-        archiveArtifacts 'bundle.tar.gz'
-        echo "Artifacts created"
-    }
 
-    stage('Stash changes') {
-        stash allowEmpty: true, includes: 'bundle.tar.gz', name: 'buildArtifacts'
-    }
-         stage('Approval') {
+
+   stage('Approval') {
             // no agent, so executors are not used up when waiting for approvals
-            //agent none
-           // steps {
+            agent none
+            steps {
                 script {
                     def deploymentDelay = input id: 'Deploy', message: 'Deploy to production?', submitter: 'rkivisto,admin', parameters: [choice(choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'], description: 'Hours to delay deployment?', name: 'deploymentDelay')]
                     sleep time: deploymentDelay.toInteger(), unit: 'HOURS'
-             //   }
+                }
             }
         }
-       //  stage('Deploy'){
-         //             powershell 'pm2 restart all'
-        // }
-     }
-node('aws_node') {
-    echo 'Unstash'
-    unstash 'buildArtifacts'
-    echo 'Artifacts copied'
-
-    echo 'Copy'
-    sh 'yes -Recurse (copy -R bundle.tar.gz /var/www/html) -and (cd /var/www/html) -and (7z -xvf bundle.tar.gz)'
-    echo 'Copy completed'
+	
+    stage('Build images') {
+	      steps {
+		bat '''
+			  docker build -f "Dockerfile" -t bibekkumar/ng7:latest .
+		'''
+	      }
+       }
+   
+     stage('Push Docker image') {
+	  steps{
+		    withDockerRegistry([ credentialsId: "Docker_Hub", url: "" ]){
+			
+			bat "docker push bibekkumar/ng7:latest"   
+	  	   }
+	   }
+       } 
+  }
 }
