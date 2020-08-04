@@ -18,6 +18,7 @@ pipeline {
             bat 'npm run ng -- build --prod'
             echo "Build completed"
         }
+    }
 
 
 
