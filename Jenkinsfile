@@ -6,20 +6,18 @@ pipeline {
          git 'https://github.com/bibekkumar8/angular7-sample.git'
        }
     }
-   stage('Install dependencies') {
-        nodejs('nodejs') {
-            bat 'npm install'
-            echo "Modules installed"
-        }
-        
-    }
-    stage('Build') {
-        nodejs('nodejs') {
-            bat 'npm run ng -- build --prod'
-            echo "Build completed"
-        }
-    }
-
+  stage("Install node modules") {
+     steps {
+	     bat 'npm install'
+         echo "modules installed"
+   }
+   }
+   stage("build") {
+     steps {
+		bat 'npm run ng -- build --prod'
+            echo "build successful"
+   }
+   }
 
 
    stage('Approval') {
