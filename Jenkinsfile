@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('SCM') {
       steps {
-         git 'https://github.com/bibekkumar8/angular7-sample.git
+         git 'https://github.com/bibekkumar8/angular7-sample.git'
     }
    stage("Install node modules") {
      steps {
