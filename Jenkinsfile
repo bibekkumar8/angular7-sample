@@ -1,26 +1,40 @@
 pipeline {
-      agent any
-      stages {
-       stage('Cloning Git') {
-         steps {
-            checkout scm
-            }
-       }
-stage(' adding user') {
+ agent any
+  stages {
+    stage('SCM') {
       steps {
-           script{
-              sudo groupadd docker
-              sudo usermod -aG docker $USER
-              sudo newgrp docker
-             }
+         git 'https://github.com/bibekkumar8/angular7-sample.git
+    }
+   stage("Install node modules") {
+     steps {
+	     powershell 'npm install'
+         echo "modules installed"
+   }
+   }
+   stage("build") {
+     steps {
+			powershell 'npm run ng -- build --prod'
+            echo "build successful"
+   }
+   }
+
+
+
+   stage('Approval') {
+            // no agent, so executors are not used up when waiting for approvals
+            agent none
+            steps {
+                script {
+                    def deploymentDelay = input id: 'Deploy', message: 'Deploy to production?', submitter: 'rkivisto,admin', parameters: [choice(choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'], description: 'Hours to delay deployment?', name: 'deploymentDelay')]
+                    sleep time: deploymentDelay.toInteger(), unit: 'HOURS'
+                }
             }
-         }
-        stage('Build images') {
+        }
+	
+    stage('Build images') {
 	      steps {
 		bat '''
-			  cd sm-shop
-			  docker build -f "Dockerfile" -t /angular7-sample .
-		  
+			  docker build -f "Dockerfile" -t bibekkumar/ng7:latest .
 		'''
 	      }
        }
@@ -29,33 +43,9 @@ stage(' adding user') {
 	  steps{
 		    withDockerRegistry([ credentialsId: "Docker_Hub", url: "" ]){
 			
-			bat "docker push bibek1234/angular7-sample"   
+			bat "docker push bibekkumar/ng7:latest"   
 	  	   }
 	   }
        } 
-       stage('Deploy On Aws'){
-	      /* 
-	       environment{
-		       
-		        dockerRun = "docker run -p 8080:8080 -d --name my-app kammana/my-app:2.0.0"
-	       }
-		*/
-	       steps{
-			sshagent(['dev-server']) {
-			bat "ssh -o StrictHostKeyChecking=no ec2-user@3.235.30.68 sudo docker run bibekkumar/angular7-sample"
-			}
-	   	}
-   }
-} 
-	post {
-        always {
-            //archiveArtifacts artifacts: 'generatedFile.log', onlyIfSuccessful: true
-          
-            emailext attachLog: true,
-                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
-                recipientProviders: [developers(), requestor()],
-                subject: "Jenkins Build :- ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
-            
-        }
-    }
+  }
 }
