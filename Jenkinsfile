@@ -35,7 +35,7 @@ pipeline {
     stage('Build images') {
 	      steps {
 		bat '''
-			  docker build -f "Dockerfile" -t prahaskattimani/ng7:latest .
+			  docker build -f "Dockerfile" -t bibekkumar/ng7:latest .
 		'''
 	      }
        }
@@ -44,7 +44,7 @@ pipeline {
 	  steps{
 		    withDockerRegistry([ credentialsId: "Docker_Hub", url: "" ]){
 			
-			bat "docker push prahaskattimani/ng7:latest"   
+			bat "docker push bibekkumar/ng7:latest"   
 	  	   }
 	   }
        } 
