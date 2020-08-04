@@ -14,7 +14,7 @@ pipeline {
    }
    stage("build") {
      steps {
-			powershell 'npm run ng -- build --prod'
+			bat 'npm run ng -- build --prod
             echo "build successful"
    }
    }
