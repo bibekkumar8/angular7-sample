@@ -8,14 +8,14 @@ pipeline {
     }
     stage('Install dependencies') {
         steps{
-            bat'npm install'
+            sh'npm install'
             echo "Modules installed"
         }
         
     }
     stage('Build') {
         steps{
-            bat'npm run ng --build--prod'
+            sh'npm run ng --build--prod'
             echo "Build completed"
         }
         
