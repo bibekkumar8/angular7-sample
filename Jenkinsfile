@@ -30,6 +30,7 @@ pipeline {
                 }
             }
         }
+	
     stage('Build images') {
 	      steps {
 		bat '''
