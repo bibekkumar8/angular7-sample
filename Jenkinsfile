@@ -20,7 +20,7 @@ pipeline {
    }
 
 
-   stage('Approval') {
+  stage('Approval') {
             // no agent, so executors are not used up when waiting for approvals
             agent none
             steps {
@@ -30,7 +30,6 @@ pipeline {
                 }
             }
         }
-	
     stage('Build images') {
 	      steps {
 		bat '''
