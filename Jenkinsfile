@@ -14,7 +14,7 @@ pipeline {
    }
    stage("build") {
      steps {
-			powershell 'npm run -- build --prod'
+			powershell 'npm run -- build'
             echo "build successful"
    }
    }
