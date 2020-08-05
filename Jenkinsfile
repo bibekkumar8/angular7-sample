@@ -15,7 +15,7 @@ pipeline {
     }
     stage('Build') {
         steps{
-            bat 'npm run ng -- build --prod'
+            bat 'npm run -- build --prod'
             echo "Build completed"
         }
         
