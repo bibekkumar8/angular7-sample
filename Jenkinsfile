@@ -6,18 +6,21 @@ pipeline {
          git 'https://github.com/bibekkumar8/angular7-sample.git'
        }
     }
-    stage("Install node modules") {
-     steps {
-	     powershell 'npm install'
-         echo "modules installed"
-   }
+    stage('Install dependencies') {
+        nodejs('nodejs') {
+            bat 'npm install'
+            echo "Modules installed"
+        }
+        
+    
    }
    stage("build") {
-     steps {
-			 bat 'npm run ng -- build --prod'
+     nodejs('nodejs') {
+            bat 'npm run ng -- build --prod'
             echo "Build completed"
-   }
-   }
+        }
+        
+    }
 
    stage('Approval') {
             // no agent, so executors are not used up when waiting for approvals
