@@ -7,18 +7,18 @@ pipeline {
        }
     }
     stage('Install dependencies') {
-        nodejs('nodejs') {
+       
             bat 'npm install'
             echo "Modules installed"
         }
         
     
-   }
+   
    stage("build") {
-     nodejs('nodejs') {
+    
             bat 'npm run ng -- build --prod'
             echo "Build completed"
-        }
+       
         
     }
 
