@@ -15,7 +15,7 @@ pipeline {
     }
     stage('Build') {
         steps{
-            bat 'npm run -- build --prod'
+            bat 'npm run ng -- build --prod'
             echo "Build completed"
         }
         
@@ -35,7 +35,7 @@ pipeline {
     stage('Build images') {
 	      steps {
 		bat '''
-			  docker build -f "Dockerfile" -t bibekkumar/ng7:latest .
+			  docker build -f "Dockerfile" -t bibekkumar/Angular-sample:latest .
 		'''
 	      }
        }
